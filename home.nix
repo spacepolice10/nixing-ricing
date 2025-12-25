@@ -4,16 +4,17 @@
   home.username = "spcpolice";
   home.stateVersion = "25.11";
   home.packages = with pkgs; [
-     aerospace
-     lazygit
-     ripgrep
-     fzf
-     fd
-     eza
-     bat
-     raycast
-     _1password-gui
-     opencode
+    aerospace
+    lazygit
+    ripgrep
+    fzf
+    fd
+    eza
+    bat
+    raycast
+    _1password-gui
+    opencode
+    brave
     ];
 
   programs.ghostty = {
