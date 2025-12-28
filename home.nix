@@ -28,7 +28,7 @@
         font-family = "FiraCode Nerd Font";
         cursor-style = "block";
         unfocused-split-opacity = 0.88;
-        split-divider-color = "#FFF222";
+        split-divider-color = "#222222";
         window-decoration = "none";
         keybind = [
           "ctrl+cmd+h=goto_split:left"
@@ -36,8 +36,10 @@
           "ctrl+cmd+k=goto_split:up"
           "ctrl+cmd+l=goto_split:right"
           "ctrl+cmd+m=toggle_split_zoom"
-          "ctrl+cmd+shift+h=resize_split:left,250"
-          "ctrl+cmd+shift+l=resize_split:right,250"
+          "ctrl+cmd+shift+h=resize_split:left,360"
+          "ctrl+cmd+shift+l=resize_split:right,360"
+          "ctrl+cmd+shift+j=resize_split:up, 225"
+          "ctrl+cmd+shift+j=resize_split:down, 225"
         ];
        };
   };
