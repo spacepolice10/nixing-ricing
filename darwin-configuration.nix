@@ -21,6 +21,9 @@
     TrackpadRightClick = true;
     TrackpadThreeFingerDrag = true;
   };
+  system.defaults.screencapture = {
+    target = "clipboard"
+  };
   system.defaults.NSGlobalDomain."com.apple.trackpad.scaling" = 2.5;
   launchd.user.agents.aerospace = {
     serviceConfig = {
