@@ -9,9 +9,11 @@
 
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs }:
+  outputs = inputs@{ self, nix-darwin, home-manager, nix-homebrew, nixpkgs }:
   let
     configuration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -53,18 +55,25 @@
   {
     # Build darwin flake using:
     darwinConfigurations."spcpolice" = nix-darwin.lib.darwinSystem {
-      modules = [ 
-      configuration 
+      modules = [
+      configuration
       ./darwin-configuration.nix
-       home-manager.darwinModules.home-manager
-           {
-             home-manager.useGlobalPkgs = true;
-             home-manager.useUserPackages = true;
-             home-manager.users.spcpolice =
-               import ./home.nix;
-             home-manager.backupFileExtension = "backup";
-           }
-      ];
+        nix-homebrew.darwinModules.nix-homebrew
+        {
+          nix-homebrew = {
+            enable = true;
+            user = "spcpolice";
+          };
+        }
+        home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.spcpolice =
+                import ./home.nix;
+              home-manager.backupFileExtension = "backup";
+            }
+       ];
     };
   };
 

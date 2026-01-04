@@ -11,6 +11,7 @@
     autohide = true;
     autohide-delay = 0.0;
     autohide-time-modifier = 0.25;
+    orientation = "left";
   };
   system.keyboard = {
     enableKeyMapping = true;
@@ -25,13 +26,21 @@
     target = "clipboard";
   };
   system.defaults.NSGlobalDomain."com.apple.trackpad.scaling" = 2.5;
-  launchd.user.agents.aerospace = {
-    serviceConfig = {
-      ProgramArguments = [
-        "/Applications/Aerospace.app/Contents/MacOS/Aerospace"
-      ];
-      RunAtLoad = true;
-      KeepAlive = false;
-    };
-  };
-}
+   launchd.user.agents.aerospace = {
+     serviceConfig = {
+       ProgramArguments = [
+         "/Applications/Aerospace.app/Contents/MacOS/Aerospace"
+       ];
+       RunAtLoad = true;
+       KeepAlive = false;
+     };
+   };
+
+   homebrew = {
+     enable = true;
+     casks = [
+       "google-chrome"
+       "firefox"
+     ];
+   };
+ }
