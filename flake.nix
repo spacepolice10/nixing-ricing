@@ -10,9 +10,12 @@
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nix-homebrew, nixpkgs }:
+  outputs = inputs@{ self, nix-darwin, home-manager, nix-homebrew, nixpkgs, nixvim }:
   let
     configuration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -57,13 +60,14 @@
           };
         }
          home-manager.darwinModules.home-manager
-             {
-               home-manager.useGlobalPkgs = true;
-               home-manager.useUserPackages = true;
-                home-manager.users.spcpolice = { config, pkgs, lib, ... }:
-                  import ./home.nix { inherit config pkgs lib; };
-               home-manager.backupFileExtension = "backup";
-             }
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit inputs; };
+                 home-manager.users.spcpolice = { config, pkgs, lib, ... }:
+                   import ./home.nix { inherit config pkgs lib; };
+                home-manager.backupFileExtension = "backup";
+              }
        ];
     };
   };
