@@ -109,8 +109,54 @@ in
     enable = true;
   };
 
-  imports = [
-    ./nvim/nixvim.nix
-  ];
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    defaultEditor = true;
+    extraConfig = ''
+      set number
+      set relativenumber
+      set tabstop=2
+      set shiftwidth=2
+      set expandtab
+      set smartindent
+      set breakindent
+      set nowrap
+      set hidden
+      set noswapfile
+      set nobackup
+      set undofile
+      set updatetime=250
+      set timeoutlen=300
+      set ignorecase
+      set smartcase
+      set signcolumn=yes
+      set scrolloff=8
+      set sidescrolloff=8
+      set mouse=a
+      set termguicolors
+      let mapleader = " "
+      let maplocalleader = "\\"
+
+      colorscheme catppuccin
+    '';
+    plugins = with pkgs.vimPlugins; [
+      lazy-nvim
+      nvim-treesitter
+      telescope-nvim
+      telescope-fzf-native-nvim
+      which-key-nvim
+      nvim-autopairs
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp-path
+      cmp-buffer
+      nvim-lspconfig
+      gitsigns-nvim
+      nvim-comment
+      indent-blankline-nvim
+    ];
+  };
 
 }
