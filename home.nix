@@ -108,7 +108,21 @@ in
 
   home.activation.cloneLazyVim = lib.hm.dag.entryAfter ["writeBoundary"] ''
     if [ ! -d ~/.config/nvim ]; then
-      git clone https://github.com/LazyVim/starter ~/.config/nvim
+      ${pkgs.git}/bin/git clone https://github.com/LazyVim/starter ~/.config/nvim
     fi
   '';
+
+  home.file = {
+    "nvim/lua/plugins/colorscheme.lua".text = ''
+      return {
+        { "Mofiqul/dracula.nvim" },
+        {
+          "LazyVim/LazyVim",
+          opts = {
+            colorscheme = "dracula",
+          },
+        },
+      }
+    '';
+  };
 }
