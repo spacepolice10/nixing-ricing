@@ -38,6 +38,9 @@
 
    homebrew = {
      enable = true;
+     brews = [
+        "opencode"
+     ];
      casks = [
        "google-chrome"
        "firefox"

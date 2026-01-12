@@ -1,5 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs }:
 
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
 {
   home.username = "spcpolice";
   home.stateVersion = "25.11";
@@ -13,8 +16,6 @@
     bat
     raycast
     _1password-gui
-    opencode
-    brave
     ];
 
   programs.ghostty = {

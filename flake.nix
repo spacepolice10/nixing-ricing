@@ -69,8 +69,8 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.spcpolice =
-                import ./home.nix;
+              home-manager.users.spcpolice = { config, pkgs, lib, ... }:
+                import ./home.nix { inherit config pkgs lib; };
               home-manager.backupFileExtension = "backup";
             }
        ];
