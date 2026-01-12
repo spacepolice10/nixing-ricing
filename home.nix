@@ -8,7 +8,6 @@ in
   home.stateVersion = "25.11";
   home.packages = with pkgs; [
     aerospace
-    lazygit
     ripgrep
     fzf
     fd
@@ -107,23 +106,14 @@ in
     nix-direnv.enable = true;
   };
 
+  programs.lazygit = {
+    enable = true;
+  };
+
   home.activation.cloneLazyVim = lib.hm.dag.entryAfter ["writeBoundary"] ''
     if [ ! -d ~/.config/nvim ]; then
       ${pkgs.git}/bin/git clone https://github.com/LazyVim/starter ~/.config/nvim
     fi
   '';
 
-  home.file = {
-    "nvim/lua/plugins/colorscheme.lua".text = ''
-      return {
-        { "Mofiqul/dracula.nvim" },
-        {
-          "LazyVim/LazyVim",
-          opts = {
-            colorscheme = "dracula",
-          },
-        },
-      }
-    '';
-  };
 }
