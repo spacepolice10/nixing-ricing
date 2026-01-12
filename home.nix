@@ -1,4 +1,4 @@
-{ config, lib, pkgs }:
+{ config, lib, pkgs, ... }:
 
 let
   system = pkgs.stdenv.hostPlatform.system;
@@ -96,10 +96,9 @@ in
     enableZshIntegration = true;
   };
 
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
+
+
+
 
   programs.direnv = {
     enable = true;
@@ -110,10 +109,30 @@ in
     enable = true;
   };
 
-  home.activation.cloneLazyVim = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    if [ ! -d ~/.config/nvim ]; then
-      ${pkgs.git}/bin/git clone https://github.com/LazyVim/starter ~/.config/nvim
-    fi
-  '';
+  programs.helix = {
+    enable = true;
+    settings = {
+      theme = "autumn_night_transparent";
+      editor.line-number = "relative";
+      editor.cursor-shape = {
+        normal = "block";
+        insert = "bar";
+        select = "underline";
+      };
+    };
+    languages.language = [{
+      name = "nix";
+      auto-format = true;
+      formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+    }];
+    themes = {
+      autumn_night_transparent = {
+        "inherits" = "autumn_night";
+        "ui.background" = { };
+      };
+    };
+  };
+
+  programs.neovim.enable = true;
 
 }

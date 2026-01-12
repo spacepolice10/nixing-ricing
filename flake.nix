@@ -2,15 +2,14 @@
   description = "Example nix-darwin system flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
-    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+    nix-darwin.url = "github:nix-darwin/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
   outputs = inputs@{ self, nix-darwin, home-manager, nix-homebrew, nixpkgs }:
@@ -41,14 +40,6 @@
       fonts.packages = with pkgs; [
         nerd-fonts.fira-code
       ];
-
-      # Ensure nix-darwin config persists after reboot
-      system.activationScripts.fixNixPermissions.text = ''
-        # Fix nix store permissions if needed
-        if [ -d "/nix" ]; then
-          chown -R spcpolice:staff /nix/store 2>/dev/null || true
-        fi
-      '';
   
     };
   in
@@ -65,14 +56,14 @@
             user = "spcpolice";
           };
         }
-        home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.spcpolice = { config, pkgs, lib, ... }:
-                import ./home.nix { inherit config pkgs lib; };
-              home-manager.backupFileExtension = "backup";
-            }
+         home-manager.darwinModules.home-manager
+             {
+               home-manager.useGlobalPkgs = true;
+               home-manager.useUserPackages = true;
+                home-manager.users.spcpolice = { config, pkgs, lib, ... }:
+                  import ./home.nix { inherit config pkgs lib; };
+               home-manager.backupFileExtension = "backup";
+             }
        ];
     };
   };
