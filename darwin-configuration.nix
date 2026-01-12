@@ -11,7 +11,7 @@
     autohide = true;
     autohide-delay = 0.0;
     autohide-time-modifier = 0.25;
-    orientation = "left";
+    orientation = "right";
   };
   system.keyboard = {
     enableKeyMapping = true;
