@@ -26,17 +26,8 @@
     target = "clipboard";
   };
   system.defaults.NSGlobalDomain."com.apple.trackpad.scaling" = 2.5;
-   launchd.user.agents.aerospace = {
-     serviceConfig = {
-       ProgramArguments = [
-         "/Applications/Aerospace.app/Contents/MacOS/Aerospace"
-       ];
-       RunAtLoad = true;
-       KeepAlive = false;
-     };
-   };
 
-   homebrew = {
+  homebrew = {
      enable = true;
      brews = [
         "opencode"

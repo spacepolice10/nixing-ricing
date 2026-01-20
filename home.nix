@@ -1,11 +1,15 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
-let
-  system = pkgs.stdenv.hostPlatform.system;
-in
 {
   home.username = "spcpolice";
   home.stateVersion = "25.11";
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+  };
+
+  xdg.configFile."nvim".source = ./nvim;
 
   home.packages = with pkgs; [
     aerospace
@@ -18,33 +22,33 @@ in
     raycast
     _1password-cli
     _1password-gui
-    ];
+  ];
 
   programs.ghostty = {
-      enable = true;
-      package = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
+    enable = true;
+    package = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
 
-      settings = {
-        font-size = 15;
-        font-family = "FiraCode Nerd Font";
-        cursor-style = "block";
-        unfocused-split-opacity = 0.88;
-        split-divider-color = "#222222";
-        window-decoration = "none";
-        keybind = [
-          "ctrl+cmd+h=goto_split:left"
-          "ctrl+cmd+j=goto_split:down"
-          "ctrl+cmd+k=goto_split:up"
-          "ctrl+cmd+l=goto_split:right"
-          "ctrl+cmd+m=toggle_split_zoom"
-          "ctrl+cmd+shift+h=resize_split:left,360"
-          "ctrl+cmd+shift+l=resize_split:right,360"
-          "ctrl+cmd+shift+k=resize_split:up,225"
-          "ctrl+cmd+shift+j=resize_split:down,225"
-        ];
-       };
+    settings = {
+      font-size = 15;
+      font-family = "FiraCode Nerd Font";
+      cursor-style = "block";
+      unfocused-split-opacity = 0.88;
+      split-divider-color = "#222222";
+      window-decoration = "none";
+      keybind = [
+        "ctrl+cmd+h=goto_split:left"
+        "ctrl+cmd+j=goto_split:down"
+        "ctrl+cmd+k=goto_split:up"
+        "ctrl+cmd+l=goto_split:right"
+        "ctrl+cmd+m=toggle_split_zoom"
+        "ctrl+cmd+shift+h=resize_split:left,360"
+        "ctrl+cmd+shift+l=resize_split:right,360"
+        "ctrl+cmd+shift+k=resize_split:up,225"
+        "ctrl+cmd+shift+j=resize_split:down,225"
+      ];
+    };
   };
   programs.zsh = {
     enable = true;
@@ -82,10 +86,12 @@ in
     };
   };
 
-  programs.git.settings = {
-      enable = true;
+  programs.git = {
+    enable = true;
+    settings = {
       user.name = "spacepolice10";
       user.email = "naysayer@hey.com";
+    };
   };
 
   programs.zoxide = {
@@ -98,10 +104,6 @@ in
     enableZshIntegration = true;
   };
 
-
-
-
-
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
@@ -109,16 +111,10 @@ in
 
   programs.lazygit = {
     enable = true;
-  };
-
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-    defaultEditor = true;
-  };
-
-  xdg.configFile = {
-    "nvim".source = ./nvim;
+    settings = {
+      gui.theme = {
+        name = "dracula";
+      };
+    };
   };
 }
