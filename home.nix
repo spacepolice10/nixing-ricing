@@ -9,7 +9,10 @@
     defaultEditor = true;
   };
 
-  xdg.configFile."nvim".source = ./nvim;
+  home.file.".config/nvim" = {
+    source = ./nvim;
+    recursive = true;
+  };
 
   home.packages = with pkgs; [
     aerospace
