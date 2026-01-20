@@ -6,6 +6,7 @@ in
 {
   home.username = "spcpolice";
   home.stateVersion = "25.11";
+
   home.packages = with pkgs; [
     aerospace
     ripgrep
@@ -13,6 +14,7 @@ in
     fd
     eza
     bat
+    tailspin
     raycast
     _1password-cli
     _1password-gui
@@ -114,52 +116,21 @@ in
     viAlias = true;
     vimAlias = true;
     defaultEditor = true;
-    extraConfig = ''
-      lua << EOF
+  };
+
+  xdg.configFile = {
+    "nvim/init.lua".text = ''
       local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-      if not (vim.uv or vim.loop).fs_stat(lazypath) then
+      if not vim.loop.fs_stat(lazypath) then
         vim.fn.system({
-          "git",
-          "clone",
-          "--filter=blob:none",
-          "--branch=stable",
+          "git", "clone", "--filter=blob:none",
           "https://github.com/folke/lazy.nvim.git",
-          lazypath,
+          "--branch=stable", lazypath
         })
       end
       vim.opt.rtp:prepend(lazypath)
-
-      require("lazy").setup({
-        spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-          { import = "lazyvim.plugins.extras.coding.mini-surround" },
-          { import = "lazyvim.plugins.extras.editor.mini-files" },
-          { import = "lazyvim.plugins.extras.editor.telescope" },
-        },
-        defaults = {
-          lazy = false,
-          version = false,
-        },
-        install = {
-          colorscheme = { "catppuccin" },
-        },
-        performance = {
-          rtp = {
-            disabled_plugins = {
-              "gzip",
-              "tarPlugin",
-              "tohtml",
-              "tutor",
-              "zipPlugin",
-            },
-          },
-        },
-      })
-      EOF
+      require("lazy").setup("plugins")
     '';
-    plugins = with pkgs.vimPlugins; [
-      lazy-nvim
-    ];
+    "nvim/lua/plugins".source = ./nvim/lua/plugins;
   };
-
 }
