@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   home.username = "spcpolice";
@@ -22,6 +28,7 @@
     eza
     bat
     tailspin
+
     raycast
     _1password-cli
     _1password-gui
@@ -87,6 +94,46 @@
       EDITOR = "nvim";
       VISUAL = "nvim";
     };
+  };
+
+  programs.helix = {
+    enable = true;
+    settings = {
+      theme = "dracula";
+      editor.line-number = "relative";
+      editor.file-picker.hidden = false;
+      editor.cursor-shape = {
+        normal = "block";
+        insert = "bar";
+        select = "underline";
+      };
+      keys.normal = {
+        "C-s" = ":w";
+        "C-r" = ":reload-all";
+      };
+      keys.insert = {
+        "C-s" = [
+          ":w"
+          "normal_mode"
+        ];
+      };
+    };
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+      }
+      {
+        name = "typescript";
+        auto-format = true;
+        formatter = {
+          command = "prettier";
+          args = [ "--parser" "typescript" ];
+        };
+      }
+    ];
+    extraPackages = [ pkgs.nil ];
   };
 
   programs.git = {
