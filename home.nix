@@ -15,11 +15,6 @@
     defaultEditor = true;
   };
 
-  home.file.".config/nvim" = {
-    source = ./nvim;
-    recursive = true;
-  };
-
   home.packages = with pkgs; [
     aerospace
     ripgrep
@@ -100,6 +95,7 @@
     enable = true;
     settings = {
       theme = "dracula";
+      editor.auto-format = true;
       editor.line-number = "relative";
       editor.file-picker.hidden = false;
       editor.cursor-shape = {
@@ -124,16 +120,7 @@
         auto-format = true;
         formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
       }
-      {
-        name = "typescript";
-        auto-format = true;
-        formatter = {
-          command = "prettier";
-          args = [ "--parser" "typescript" ];
-        };
-      }
     ];
-    extraPackages = [ pkgs.nil ];
   };
 
   programs.git = {
