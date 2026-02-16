@@ -119,6 +119,7 @@
 
   programs.git = {
     enable = true;
+    ignores = [ ".direnv" ];
     settings = {
       user.name = "spacepolice10";
       user.email = "naysayer@hey.com";
