@@ -10,11 +10,6 @@
   home.username = "spcpolice";
   home.stateVersion = "25.11";
 
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
-
   home.packages = with pkgs; [
     aerospace
     ripgrep
@@ -23,7 +18,6 @@
     eza
     bat
     tailspin
-
     raycast
     _1password-cli
     _1password-gui
@@ -86,8 +80,8 @@
     '';
 
     sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
+      EDITOR = "hx";
+      VISUAL = "hx";
     };
   };
 
@@ -101,7 +95,7 @@
       editor.cursor-shape = {
         normal = "block";
         insert = "bar";
-        select = "underline";
+        select = "bar";
       };
       keys.normal = {
         "C-s" = ":w";
@@ -153,5 +147,10 @@
         name = "dracula";
       };
     };
+  };
+
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
   };
 }
