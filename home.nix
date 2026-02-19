@@ -63,6 +63,8 @@
       vi = "nvim";
       grep = "rg";
       cd = "z";
+      flake-update = "sudo nix flake update --flake /etc/nix-darwin";
+      nix-rebuild = "sudo nix run nix-darwin -- switch --flake /etc/nix-darwin#$(hostname -s)";
     };
 
     initContent = ''
@@ -113,6 +115,27 @@
         name = "nix";
         auto-format = true;
         formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+      }
+    ];
+  };
+
+  programs.tmux = {
+    enable = true;
+    mouse = true;
+    baseIndex = 1;
+    escapeTime = 0;
+    keyMode = "vi";
+    terminal = "screen-256color";
+    plugins = with pkgs.tmuxPlugins; [
+      sensible
+      {
+        plugin = dracula;
+        extraConfig = ''
+          set -g @dracula-show-powerline true
+          set -g @dracula-plugins "cpu-usage ram-usage time"
+          set -g @dracula-show-flags true
+          set -g @dracula-show-left-icon session
+        '';
       }
     ];
   };
