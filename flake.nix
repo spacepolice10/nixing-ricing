@@ -28,7 +28,7 @@
     };
   in
   {
-    darwinConfigurations."spcpolice" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."spacepolice" = nix-darwin.lib.darwinSystem {
       modules = [
         configuration
         ./darwin-configuration.nix

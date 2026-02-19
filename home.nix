@@ -36,6 +36,7 @@
       unfocused-split-opacity = 0.88;
       split-divider-color = "#222222";
       window-decoration = "none";
+      macos-option-as-alt = true;
       keybind = [
         "ctrl+cmd+h=goto_split:left"
         "ctrl+cmd+j=goto_split:down"
@@ -122,6 +123,7 @@
   programs.tmux = {
     enable = true;
     mouse = true;
+    prefix = "C-Space";
     baseIndex = 1;
     escapeTime = 0;
     keyMode = "vi";
@@ -138,6 +140,28 @@
         '';
       }
     ];
+    extraConfig = ''
+      # New windows/panes inherit current path
+      bind c new-window -c "#{pane_current_path}"
+      bind % split-window -h -c "#{pane_current_path}"
+      bind '"' split-window -v -c "#{pane_current_path}"
+
+      # Switch windows with Alt+1,2,3,4,q,w,e,r (no prefix)
+      bind -n M-1 select-window -t 1
+      bind -n M-2 select-window -t 2
+      bind -n M-3 select-window -t 3
+      bind -n M-4 select-window -t 4
+      bind -n M-q select-window -t 5
+      bind -n M-w select-window -t 6
+      bind -n M-e select-window -t 7
+      bind -n M-r select-window -t 8
+
+      # Switch panes with Ctrl+Alt+h,j,k,l (no prefix)
+      bind -n C-M-h select-pane -L
+      bind -n C-M-j select-pane -D
+      bind -n C-M-k select-pane -U
+      bind -n C-M-l select-pane -R
+    '';
   };
 
   programs.git = {
