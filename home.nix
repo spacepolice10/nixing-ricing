@@ -69,6 +69,12 @@
     };
 
     initContent = ''
+      # Report current directory to tmux via OSC 7 for #{pane_current_path}
+      autoload -Uz add-zsh-hook
+      _osc7_cwd() { printf '\033]7;file://%s%s\033\\' "$HOST" "$PWD"; }
+      add-zsh-hook chpwd _osc7_cwd
+      _osc7_cwd
+
       # Enhanced fzf function with preview and cd
       f() {
         local file
@@ -134,17 +140,18 @@
         plugin = dracula;
         extraConfig = ''
           set -g @dracula-show-powerline true
-          set -g @dracula-plugins "cpu-usage ram-usage time"
+          set -g @dracula-plugins "cpu-usage ram-usage battery time"
           set -g @dracula-show-flags true
           set -g @dracula-show-left-icon session
         '';
       }
     ];
     extraConfig = ''
+      set-option -g default-shell /bin/zsh
+
       # New windows/panes inherit current path
-      bind c new-window -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"
-      bind '"' split-window -v -c "#{pane_current_path}"
+      bind '^' split-window -v -c "#{pane_current_path}"
 
       # Switch windows with Alt+1,2,3,4,q,w,e,r (no prefix)
       bind -n M-1 select-window -t 1
