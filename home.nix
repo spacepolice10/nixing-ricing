@@ -75,6 +75,40 @@
       add-zsh-hook chpwd _osc7_cwd
       _osc7_cwd
 
+      # Tmux layout: claude (left) | empty terminal (top-right) / hx (bottom-right)
+      mux-dev() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux new-window -n "$(basename "$dir")" -c "$dir"
+        tmux split-window -h -c "$dir"
+        tmux split-window -v -c "$dir"
+        tmux send-keys "hx ." Enter
+        tmux select-pane -U
+        tmux select-pane -L
+        tmux send-keys "claude" Enter
+        tmux select-pane -R
+      }
+
+      # Tmux layout: two claude instances side by side
+      mux-dev-agents() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux new-window -n "$(basename "$dir")" -c "$dir"
+        tmux split-window -h -c "$dir"
+        tmux select-pane -L
+        tmux send-keys "claude" Enter
+        tmux select-pane -R
+        tmux send-keys "claude" Enter
+      }
+
       # Enhanced fzf function with preview and cd
       f() {
         local file
@@ -168,6 +202,10 @@
       bind -n C-M-j select-pane -D
       bind -n C-M-k select-pane -U
       bind -n C-M-l select-pane -R
+
+      # Dim inactive panes
+      set -g window-style 'fg=colour244,bg=default'
+      set -g window-active-style 'fg=colour255,bg=default'
     '';
   };
 

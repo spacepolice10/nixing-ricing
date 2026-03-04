@@ -2,6 +2,8 @@
 
 
 {
+  networking.hostName = "spacepolice";
+
   users.users.spcpolice = {
     name = "spcpolice";
     home = /Users/spcpolice;
