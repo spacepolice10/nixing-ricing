@@ -177,6 +177,7 @@
           set -g @dracula-plugins "cpu-usage ram-usage battery time"
           set -g @dracula-show-flags true
           set -g @dracula-show-left-icon session
+          set -g @dracula-battery-label ""
         '';
       }
     ];
