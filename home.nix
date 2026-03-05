@@ -21,6 +21,7 @@
     raycast
     _1password-cli
     _1password-gui
+    nerd-fonts.jetbrains-mono
   ];
 
   programs.ghostty = {
@@ -83,7 +84,9 @@
         else
           dir="$PWD"
         fi
-        tmux new-window -n "$(basename "$dir")" -c "$dir"
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
         tmux split-window -h -c "$dir"
         tmux split-window -v -c "$dir"
         tmux send-keys "hx ." Enter
@@ -101,11 +104,11 @@
         else
           dir="$PWD"
         fi
-        tmux new-window -n "$(basename "$dir")" -c "$dir"
-        tmux split-window -h -c "$dir"
-        tmux select-pane -L
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
         tmux send-keys "claude" Enter
-        tmux select-pane -R
+        tmux split-window -h -c "$dir"
         tmux send-keys "claude" Enter
       }
 
@@ -186,28 +189,49 @@
 
       # New windows/panes inherit current path
       bind % split-window -h -c "#{pane_current_path}"
-      bind '^' split-window -v -c "#{pane_current_path}"
+      bind '"' split-window -v -c "#{pane_current_path}"
 
-      # Switch windows with Alt+1,2,3,4,q,w,e,r (no prefix)
+      # Switch windows with Alt+1-5 (no prefix)
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
       bind -n M-3 select-window -t 3
       bind -n M-4 select-window -t 4
-      bind -n M-q select-window -t 5
-      bind -n M-w select-window -t 6
-      bind -n M-e select-window -t 7
-      bind -n M-r select-window -t 8
+      bind -n M-5 select-window -t 5
 
-      # Switch panes with Ctrl+Alt+h,j,k,l (no prefix)
-      bind -n C-M-h select-pane -L
-      bind -n C-M-j select-pane -D
-      bind -n C-M-k select-pane -U
-      bind -n C-M-l select-pane -R
+      # Switch panes with Alt+h,j,k,l (no prefix)
+      bind -n M-h select-pane -L
+      bind -n M-j select-pane -D
+      bind -n M-k select-pane -U
+      bind -n M-l select-pane -R
 
       # Dim inactive panes
       set -g window-style 'fg=colour244,bg=default'
       set -g window-active-style 'fg=colour255,bg=default'
     '';
+  };
+
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      window = {
+        padding = {
+          x = 0;
+          y = 0;
+        };
+        decorations = "buttonless";
+        option_as_alt = "Both";
+      };
+      font = {
+        normal.family = "JetBrainsMono Nerd Font";
+        size = 15.0;
+      };
+      colors = {
+        primary = {
+          background = "#1e1e2e";
+          foreground = "#cdd6f4";
+        };
+      };
+    };
   };
 
   programs.git = {
