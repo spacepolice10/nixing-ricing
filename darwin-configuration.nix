@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 
-
 {
   networking.hostName = "spacepolice";
 
@@ -30,15 +29,15 @@
   system.defaults.NSGlobalDomain."com.apple.trackpad.scaling" = 2.5;
 
   homebrew = {
-     enable = true;
-     onActivation = {
+    enable = true;
+    onActivation = {
       autoUpdate = true;
       upgrade = true;
       cleanup = "zap";
-     };
-     casks = [
-       "claude-code"
-       "firefox"
-     ];
-   };
- }
+    };
+    casks = [
+      "claude-code"
+      "firefox"
+    ];
+  };
+}
