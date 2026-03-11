@@ -282,6 +282,11 @@
     '';
   };
 
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
+  };
+
   programs.git = {
     enable = true;
     ignores = [ ".direnv" ];
@@ -309,8 +314,10 @@
   programs.lazygit = {
     enable = true;
     settings = {
-      gui.theme = {
-        name = "dracula";
+      gui.theme.name = "dracula";
+      git.paging = {
+        colorArg = "always";
+        externalDiffCommand = "difft --color=always";
       };
     };
   };
