@@ -282,30 +282,6 @@
     '';
   };
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      window = {
-        padding = {
-          x = 0;
-          y = 0;
-        };
-        decorations = "buttonless";
-        option_as_alt = "Both";
-      };
-      font = {
-        normal.family = "JetBrainsMono Nerd Font";
-        size = 15.0;
-      };
-      colors = {
-        primary = {
-          background = "#1e1e2e";
-          foreground = "#cdd6f4";
-        };
-      };
-    };
-  };
-
   programs.git = {
     enable = true;
     ignores = [ ".direnv" ];
