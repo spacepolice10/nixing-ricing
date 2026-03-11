@@ -37,7 +37,9 @@
     };
     casks = [
       "claude-code"
+      "codex"
       "firefox"
+      "google-chrome"
     ];
   };
 }

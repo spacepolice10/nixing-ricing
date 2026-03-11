@@ -111,6 +111,78 @@
         tmux send-keys "claude" Enter
       }
 
+      # mx-cc: claude (left) | empty terminal (top-right) / hx (bottom-right)
+      mx-cc() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+        tmux split-window -h -c "$dir"
+        tmux split-window -v -c "$dir"
+        tmux send-keys "hx ." Enter
+        tmux select-pane -U
+        tmux select-pane -L
+        tmux send-keys "claude" Enter
+        tmux select-pane -R
+      }
+
+      # mx-cx: codex (left) | empty terminal (top-right) / hx (bottom-right)
+      mx-cx() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+        tmux split-window -h -c "$dir"
+        tmux split-window -v -c "$dir"
+        tmux send-keys "hx ." Enter
+        tmux select-pane -U
+        tmux select-pane -L
+        tmux send-keys "codex" Enter
+        tmux select-pane -R
+      }
+
+      # mx-cc-agents: two claude instances side by side
+      mx-cc-agents() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+        tmux send-keys "claude" Enter
+        tmux split-window -h -c "$dir"
+        tmux send-keys "claude" Enter
+      }
+
+      # mx-cx-agents: two codex instances side by side
+      mx-cx-agents() {
+        local dir
+        if [ -n "''${1}" ]; then
+          dir=$(zoxide query "''${1}") || return 1
+        else
+          dir="$PWD"
+        fi
+        tmux rename-window "$(basename "$dir")"
+        tmux kill-pane -a
+        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+        tmux send-keys "codex" Enter
+        tmux split-window -h -c "$dir"
+        tmux send-keys "codex" Enter
+      }
+
       # Enhanced fzf function with preview and cd
       f() {
         local file
