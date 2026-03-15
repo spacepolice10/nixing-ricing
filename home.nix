@@ -294,7 +294,6 @@
     settings = {
       user.name = "spacepolice10";
       user.email = "naysayer@hey.com";
-      diff.external = "difft";
     };
   };
 
