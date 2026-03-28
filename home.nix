@@ -20,7 +20,7 @@
     raycast
     _1password-cli
     _1password-gui
-    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
   ];
 
   programs.ghostty = {
@@ -62,7 +62,7 @@
       ll = "eza -l";
       la = "eza -TL 2 -a --icons";
       tree = "eza --tree";
-      vi = "nvim";
+      vi = "hx";
       grep = "rg";
       cd = "z";
       flake-update = "sudo nix flake update --flake /etc/nix-darwin";
@@ -76,114 +76,6 @@
       add-zsh-hook chpwd _osc7_cwd
       _osc7_cwd
 
-      # Tmux layout: claude (left) | empty terminal (top-right) / hx (bottom-right)
-      mux-dev() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux split-window -h -c "$dir"
-        tmux split-window -v -c "$dir"
-        tmux send-keys "hx ." Enter
-        tmux select-pane -U
-        tmux select-pane -L
-        tmux send-keys "claude" Enter
-        tmux select-pane -R
-      }
-
-      # Tmux layout: two claude instances side by side
-      mux-dev-agents() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux send-keys "claude" Enter
-        tmux split-window -h -c "$dir"
-        tmux send-keys "claude" Enter
-      }
-
-      # mx-cc: claude (left) | empty terminal (top-right) / hx (bottom-right)
-      mx-cc() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux split-window -h -c "$dir"
-        tmux split-window -v -c "$dir"
-        tmux send-keys "hx ." Enter
-        tmux select-pane -U
-        tmux select-pane -L
-        tmux send-keys "claude" Enter
-        tmux select-pane -R
-      }
-
-      # mx-cx: codex (left) | empty terminal (top-right) / hx (bottom-right)
-      mx-cx() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux split-window -h -c "$dir"
-        tmux split-window -v -c "$dir"
-        tmux send-keys "hx ." Enter
-        tmux select-pane -U
-        tmux select-pane -L
-        tmux send-keys "codex" Enter
-        tmux select-pane -R
-      }
-
-      # mx-cc-agents: two claude instances side by side
-      mx-cc-agents() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux send-keys "claude" Enter
-        tmux split-window -h -c "$dir"
-        tmux send-keys "claude" Enter
-      }
-
-      # mx-cx-agents: two codex instances side by side
-      mx-cx-agents() {
-        local dir
-        if [ -n "''${1}" ]; then
-          dir=$(zoxide query "''${1}") || return 1
-        else
-          dir="$PWD"
-        fi
-        tmux rename-window "$(basename "$dir")"
-        tmux kill-pane -a
-        tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
-        tmux send-keys "codex" Enter
-        tmux split-window -h -c "$dir"
-        tmux send-keys "codex" Enter
-      }
-
       # Enhanced fzf function with preview and cd
       f() {
         local file
@@ -191,10 +83,7 @@
         [ -n "$file" ] && cd "$(dirname "$file")"
       }
 
-      # Auto-activate nix-darwin environment
-      if [ -f /etc/nix-darwin/activate ]; then
-        source /etc/nix-darwin/activate
-      fi
+      source "${config.xdg.configHome}/zsh/mux.zsh"
     '';
 
     sessionVariables = {
@@ -206,7 +95,7 @@
   programs.helix = {
     enable = true;
     settings = {
-      theme = "catppuccin_frappe";
+      theme = "base16_transparent";
       editor.auto-format = true;
       editor.line-number = "relative";
       editor.soft-wrap.enable = true;
@@ -244,21 +133,25 @@
     escapeTime = 0;
     keyMode = "vi";
     terminal = "screen-256color";
+    shell = "${pkgs.zsh}/bin/zsh";
     plugins = with pkgs.tmuxPlugins; [
       sensible
+      cpu
+      battery
       {
-        plugin = dracula;
+        plugin = catppuccin;
         extraConfig = ''
-          set -g @dracula-show-powerline true
-          set -g @dracula-plugins "cpu-usage ram-usage battery time"
-          set -g @dracula-show-flags true
-          set -g @dracula-show-left-icon session
-          set -g @dracula-battery-label ""
+          set -g @catppuccin_flavor "mocha"
+          set -g @catppuccin_window_status_style "rounded"
+          set -g @catppuccin_cpu_text " #{cpu_percentage}"
+          set -g @catppuccin_battery_text " #{battery_percentage}"
+          set -g @catppuccin_battery_icon "#{battery_icon} "
         '';
       }
     ];
     extraConfig = ''
-      set-option -g default-shell /bin/zsh
+      # Prevent tmux from overriding explicit window renames
+      set -g automatic-rename off
 
       # New windows/panes inherit current path
       bind % split-window -h -c "#{pane_current_path}"
@@ -280,8 +173,130 @@
       # Dim inactive panes
       set -g window-style 'fg=colour244,bg=default'
       set -g window-active-style 'fg=colour255,bg=default'
+
+      # Status line (set after catppuccin plugin loads)
+      set -g status-right-length 100
+      set -g status-left-length 100
+      set -g status-left "#{E:@catppuccin_status_session}"
+      set -g status-right "#{E:@catppuccin_status_cpu}"
+      set -ag status-right "#{E:@catppuccin_status_battery}"
+      set -ag status-right "#{E:@catppuccin_status_date_time}"
     '';
   };
+
+  xdg.configFile."zsh/mux.zsh".text = ''
+    # mx-cc: claude (left) | empty terminal (top-right) / hx (bottom-right)
+    mx-cc() {
+      local dir name
+      if [ -n "''${1}" ]; then
+        dir=$(zoxide query "''${1}") || return 1
+      else
+        dir="$PWD"
+      fi
+      name=$(basename "$dir")
+      if [ -z "$TMUX" ]; then
+        tmux new-session -s "$name" -c "$dir" \; \
+          split-window -h -c "$dir" \; \
+          split-window -v -c "$dir" \; \
+          send-keys "hx ." Enter \; \
+          select-pane -U \; \
+          select-pane -L \; \
+          send-keys "claude" Enter \; \
+          select-pane -R
+        return
+      fi
+      tmux rename-window "$name"
+      tmux kill-pane -a
+      tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+      tmux split-window -h -c "$dir"
+      tmux split-window -v -c "$dir"
+      tmux send-keys "hx ." Enter
+      tmux select-pane -U
+      tmux select-pane -L
+      tmux send-keys "claude" Enter
+      tmux select-pane -R
+    }
+
+    # mx-cx: codex (left) | empty terminal (top-right) / hx (bottom-right)
+    mx-cx() {
+      local dir name
+      if [ -n "''${1}" ]; then
+        dir=$(zoxide query "''${1}") || return 1
+      else
+        dir="$PWD"
+      fi
+      name=$(basename "$dir")
+      if [ -z "$TMUX" ]; then
+        tmux new-session -s "$name" -c "$dir" \; \
+          split-window -h -c "$dir" \; \
+          split-window -v -c "$dir" \; \
+          send-keys "hx ." Enter \; \
+          select-pane -U \; \
+          select-pane -L \; \
+          send-keys "codex" Enter \; \
+          select-pane -R
+        return
+      fi
+      tmux rename-window "$name"
+      tmux kill-pane -a
+      tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+      tmux split-window -h -c "$dir"
+      tmux split-window -v -c "$dir"
+      tmux send-keys "hx ." Enter
+      tmux select-pane -U
+      tmux select-pane -L
+      tmux send-keys "codex" Enter
+      tmux select-pane -R
+    }
+
+    # mx-cc-agents: two claude instances side by side
+    mx-cc-agents() {
+      local dir name
+      if [ -n "''${1}" ]; then
+        dir=$(zoxide query "''${1}") || return 1
+      else
+        dir="$PWD"
+      fi
+      name=$(basename "$dir")
+      if [ -z "$TMUX" ]; then
+        tmux new-session -s "$name" -c "$dir" \; \
+          send-keys "claude" Enter \; \
+          split-window -h -c "$dir" \; \
+          send-keys "claude" Enter
+        return
+      fi
+      tmux rename-window "$name"
+      tmux kill-pane -a
+      tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+      tmux send-keys "claude" Enter
+      tmux split-window -h -c "$dir"
+      tmux send-keys "claude" Enter
+    }
+
+    # mx-cx-agents: two codex instances side by side
+    mx-cx-agents() {
+      local dir name
+      if [ -n "''${1}" ]; then
+        dir=$(zoxide query "''${1}") || return 1
+      else
+        dir="$PWD"
+      fi
+      name=$(basename "$dir")
+      if [ -z "$TMUX" ]; then
+        tmux new-session -s "$name" -c "$dir" \; \
+          send-keys "codex" Enter \; \
+          split-window -h -c "$dir" \; \
+          send-keys "codex" Enter
+        return
+      fi
+      tmux rename-window "$name"
+      tmux kill-pane -a
+      tmux send-keys "cd $(printf '%q' "$dir") && clear" Enter
+      tmux send-keys "codex" Enter
+      tmux split-window -h -c "$dir"
+      tmux send-keys "codex" Enter
+    }
+  '';
 
   programs.difftastic = {
     enable = true;
